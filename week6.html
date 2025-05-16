@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    .accordion {
+      padding: 10px;
+      background-color: #f1f1f1;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+    .panel {
+      padding: 0 18px;
+      display: none;
+      background-color: #f9f9f9;
+    }
+    #galleryImage {
+      width: 300px;
+      margin: 20px 0;
+    }
+    @keyframes pulse {
+      0% { background-color: red; }
+      50% { background-color: yellow; }
+      100% { background-color: red; }
+    }
+    .feedback {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Interactive Elements and Form Validation</h1>
+
+  <!-- Button that Changes Text or Color -->
+  <button id="changeButton" class="button">Click to Change Color and Text</button>
+
+  <!-- Hover Button -->
+  <button id="hoverButton" class="button">Hover Over Me!</button>
+
+  <!-- Keypress Detection -->
+  <input type="text" id="keyInput" placeholder="Press a key..." />
+
+  <!-- Secret Action (Double-click / Long Press) -->
+  <button id="doubleClickButton" class="button">Double-click or Long Press Me!</button>
+
+  <hr>
+
+  <!-- Image Gallery -->
+  <div>
+    <img id="galleryImage" src="image1.jpg" alt="Gallery Image">
+    <button id="nextButton" class="button">Next</button>
+    <button id="prevButton" class="button">Previous</button>
+  </div>
+
+  <hr>
+
+  <!-- Accordion -->
+  <button class="accordion">Section 1</button>
+  <div class="panel">
+    <p>This is the content for section 1.</p>
+  </div>
+  <button class="accordion">Section 2</button>
+  <div class="panel">
+    <p>This is the content for section 2.</p>
+  </div>
+
+  <hr>
+
+  <!-- Form Validation -->
+  <form id="myForm">
+    <input type="text" id="name" placeholder="Name" required class="form-field">
+    <input type="email" id="email" placeholder="Enter your email" required class="form-field">
+    <input type="password" id="password" placeholder="Enter password" required class="form-field">
+    <button type="submit" class="button">Submit</button>
+  </form>
+  <p id="passwordFeedback" class="feedback"></p>
+
+  <hr>
+
+  <!-- Real-time Password Feedback -->
+  <input type="password" id="passwordField" placeholder="Enter password">
+  <p id="realTimeFeedback" class="feedback"></p>
+
+  <script>
+    // 1. Button Click Event to Change Text and Color
+    document.getElementById("changeButton").addEventListener("click", function() {
+      this.textContent = "You Clicked Me!";
+      this.style.backgroundColor = "green";
+    });
+
+    // 2. Hover Effect for Button
+    document.getElementById("hoverButton").addEventListener("mouseover", function() {
+      this.style.backgroundColor = "blue";
+    });
+    document.getElementById("hoverButton").addEventListener("mouseout", function() {
+      this.style.backgroundColor = "";
+    });
+
+    // 3. Keypress Detection
+    document.getElementById("keyInput").addEventListener("keydown", function(event) {
+      console.log("Key pressed: " + event.key);
+    });
+
+    // 4. Double-Click / Long Press Action
+    let pressTimer;
+    const longPressButton = document.getElementById("doubleClickButton");
+
+    longPressButton.addEventListener("dblclick", function() {
+      alert("You double-clicked the button!");
+    });
+
+    longPressButton.addEventListener("mousedown", function() {
+      pressTimer = setTimeout(function() {
+        alert("Long press detected!");
+      }, 1000);
+    });
+    longPressButton.addEventListener("mouseup", function() {
+      clearTimeout(pressTimer);
+    });
+
+    // 5. Image Gallery with Next/Prev Buttons
+    let currentImage = 0;
+    const images = ["bg.jpg.jpg", "computer.jpg.jpg", "https://images.pexels.com/photos/32080139/pexels-photo-32080139/free-photo-of-fresh-red-tomatoes-on-a-kitchen-counter.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"];
+    const galleryImage = document.getElementById("galleryImage");
+
+    document.getElementById("nextButton").addEventListener("click", function() {
+      currentImage = (currentImage + 1) % images.length;
+      galleryImage.src = images[currentImage];
+    });
+
+    document.getElementById("prevButton").addEventListener("click", function() {
+      currentImage = (currentImage - 1 + images.length) % images.length;
+      galleryImage.src = images[currentImage];
+    });
+
+    // 6. Accordion-style Content
+    const accordions = document.getElementsByClassName("accordion");
+    for (let i = 0; i < accordions.length; i++) {
+      accordions[i].addEventListener("click", function() {
+        const panel = this.nextElementSibling;
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+      });
+    }
+
+    // 7. Form Validation (Name and Email)
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (name.trim() === "" || email.trim() === "" || password.length < 8) {
+        event.preventDefault();
+        alert("Please fill all fields correctly!");
+      }
+    });
+
+    // 8. Real-time Password Feedback
+    document.getElementById("passwordField").addEventListener("input", function() {
+      const password = this.value;
+      const feedback = document.getElementById("realTimeFeedback");
+
+      if (password.length < 8) {
+        feedback.textContent = "Password is too short!";
+        feedback.style.color = "red";
+      } else {
+        feedback.textContent = "Password length is good.";
+        feedback.style.color = "green";
+      }
+    });
+
+    // 9. Password Feedback
+    document.getElementById("password").addEventListener("input", function() {
+      const password = this.value;
+      const feedback = document.getElementById("passwordFeedback");
+
+      if (password.length < 8) {
+        feedback.textContent = "Password must be at least 8 characters!";
+        feedback.style.color = "red";
+      } else {
+        feedback.textContent = "Password length is good.";
+        feedback.style.color = "green";
+      }
+    });
+  </script>
+
+</body>
+</html>
