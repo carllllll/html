@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Animations & LocalStorage</title>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      margin: 0;
+    }
+
+    #container {
+      text-align: center;
+    }
+
+    /* Button styling */
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Animation styling */
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* Class to trigger animation */
+    .bounced {
+      animation: bounce 1s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <button id="animateBtn">Click to Bounce</button>
+  </div>
+
+  <script>
+    // Function to check and apply user preferences from localStorage
+    function checkUserPreferences() {
+      const animationState = localStorage.getItem('animationTriggered');
+      
+      if (animationState === 'true') {
+        // Apply the animation class if previously triggered
+        document.getElementById('animateBtn').classList.add('bounced');
+      }
+    }
+
+    // Function to trigger animation on button click and store user preference in localStorage
+    function triggerAnimation() {
+      const button = document.getElementById('animateBtn');
+
+      // Add animation class
+      button.classList.add('bounced');
+
+      // Store user preference in localStorage
+      localStorage.setItem('animationTriggered', 'true');
+
+      // Remove the animation class after animation completes to allow it to trigger again
+      setTimeout(() => {
+        button.classList.remove('bounced');
+      }, 1000);
+    }
+
+    // Attach event listener to the button
+    document.getElementById('animateBtn').addEventListener('click', triggerAnimation);
+
+    // Call the function to apply stored preferences on page load
+    checkUserPreferences();
+  </script>
+</body>
+</html>
